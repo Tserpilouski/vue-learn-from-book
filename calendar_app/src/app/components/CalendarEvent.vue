@@ -3,7 +3,10 @@
     <div v-if="!event.edit">
       <span class="has-text-centered details">{{ event.details }}</span>
       <div class="has-text-centered icons">
-        <font-awesome-icon icon="trash"></font-awesome-icon>
+        <font-awesome-icon
+          @click="deleteEvent(day.id, event.details)"
+          icon="trash"
+        ></font-awesome-icon>
         <font-awesome-icon
           @click="editEvent(day.id, event.details)"
           icon="pencil-alt"
@@ -11,9 +14,16 @@
       </div>
     </div>
     <div v-if="event.edit">
-      <input type="text" :placeholder="event.details" />
+      <input
+        type="text"
+        :placeholder="event.details"
+        v-model="newEventDetails"
+      />
       <div class="has-text-centered icons">
-        <font-awesome-icon icon="fa-check"></font-awesome-icon>
+        <font-awesome-icon
+          icon="fa-check"
+          @click="updateEvent(day.id, event.details, newEventDetails)"
+        ></font-awesome-icon>
       </div>
     </div>
   </div>
@@ -24,6 +34,11 @@ import { store } from "../store";
 export default {
   name: "CalendarEvent",
   props: ["event", "day"],
+  data() {
+    return {
+      newEventDetails: "",
+    };
+  },
   computed: {
     getEventBackgroundColor() {
       const colors = ["#FF9999", "#85D6FF", "#99FF99"];
@@ -34,6 +49,15 @@ export default {
   methods: {
     editEvent(dayId, eventDetails) {
       store.editEvent(dayId, eventDetails);
+    },
+    updateEvent(dayId, originalEventDetails, updatedEventDetails) {
+      if (updatedEventDetails === "")
+        updatedEventDetails = originalEventDetails;
+      store.updateEvent(dayId, originalEventDetails, updatedEventDetails);
+      this.newEventDetails = "";
+    },
+    deleteEvent(dayId, eventDetails) {
+      store.deleteEvent(dayId, eventDetails);
     },
   },
 };

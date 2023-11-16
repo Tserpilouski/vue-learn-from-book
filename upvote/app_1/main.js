@@ -53,6 +53,14 @@ const upvoteApp = {
       });
     },
   },
+  watch: {
+    submissions: {
+      deep: true,
+      handler(submissions) {
+        console.log("Zmiana głosów w zgłoszeniach", submissions);
+      },
+    },
+  },
   components: {
     "submission-component": submissionComponent,
   },
